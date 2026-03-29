@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Piedra Papel Tijeras PRO</title>
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            font-family: Arial;
+        }
+        button {
+            padding: 15px;
+            margin: 10px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .piedra { background: #3b82f6; }
+        .papel { background: #22c55e; }
+        .tijeras { background: #ef4444; }
+    </style>
+</head>
+<body>
+
+    <h1>🔥 Piedra, Papel o Tijeras</h1>
+
+    <form method="POST">
+        <input type="text" name="nombre" placeholder="Tu nombre" required>
+        <br><br>
+
+        <button class="piedra" name="opcion" value="Piedra">✊ Piedra</button>
+        <button class="papel" name="opcion" value="Papel">✋ Papel</button>
+        <button class="tijeras" name="opcion" value="Tijeras">✌️ Tijeras</button>
+    </form>
+
+    <h2>Jugador: {{nombre}}</h2>
+
+    {% if jugador %}
+        <p>Tú: {{iconos[jugador]}} {{jugador}}</p>
+        <p>CPU: {{iconos[cpu]}} {{cpu}}</p>
+        <h2>{{resultado}}</h2>
+    {% endif %}
+
+    <h3>Marcador</h3>
+    <p>Tu: {{puntos.jugador}} | CPU: {{puntos.cpu}}</p>
+
+</body>
+</html>
