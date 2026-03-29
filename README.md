@@ -10,7 +10,7 @@ La presente unidad aborda el estudio conceptual y práctico de estos elementos, 
 
 ## Contenido de la Unidad
 
-### 🔹 2.1 Definición conceptual de componentes y librerías
+# 2.1 Definición conceptual de componentes y librerías
 
 Un **componente** es una unidad modular de software que encapsula una funcionalidad específica, la cual puede ser utilizada de manera independiente o integrada dentro de un sistema más grande. Su principal objetivo es promover la reutilización y reducir la duplicidad de código.
 
@@ -185,7 +185,7 @@ Esto facilita:
 
 Este ejemplo demuestra que los componentes y librerías no solo son conceptos teóricos, sino herramientas prácticas que permiten construir sistemas organizados, reutilizables y eficientes. La correcta aplicación de estos principios mejora significativamente la calidad del software desarrollado.
 
-### 🔹 2.2 Uso de librerías proporcionadas por el lenguaje
+### 2.2 Uso de librerías proporcionadas por el lenguaje
 
 Los lenguajes de programación modernos incluyen librerías estándar que proporcionan soluciones a problemas comunes, evitando que el desarrollador tenga que implementar desde cero funcionalidades básicas.
 
@@ -210,8 +210,155 @@ Además, el conocimiento de las librerías disponibles en un lenguaje es una hab
 
 ---
 
+Los lenguajes de programación modernos incluyen una gran variedad de **librerías estándar y externas** que permiten resolver problemas comunes sin necesidad de implementar todo desde cero. Estas librerías proporcionan funciones, clases y herramientas que optimizan el desarrollo de aplicaciones.
 
-### 🔹 2.3 Creación de componentes definidos por el usuario
+El uso adecuado de estas librerías es fundamental, ya que permite a los desarrolladores enfocarse en la lógica del problema en lugar de reinventar soluciones ya existentes.
+
+---
+
+#### Aplicación práctica
+
+El siguiente ejemplo muestra el uso de librerías en Python para desarrollar una aplicación web sencilla. En este caso, se emplea la librería **Flask**, que permite crear aplicaciones web de forma rápida y estructurada.
+
+---
+
+#### Código aplicado
+
+```python
+from flask import Flask, render_template, request
+import random
+
+app = Flask(__name__)
+
+opciones = ["Piedra", "Papel", "Tijeras"]
+
+iconos = {
+    "Piedra": "✊",
+    "Papel": "✋",
+    "Tijeras": "✌️"
+}
+
+puntos = {"jugador": 0, "cpu": 0}
+
+def determinar_ganador(jugador, cpu):
+    if jugador == cpu:
+        return "Empate"
+    elif (
+        (jugador == "Piedra" and cpu == "Tijeras") or
+        (jugador == "Papel" and cpu == "Piedra") or
+        (jugador == "Tijeras" and cpu == "Papel")
+    ):
+        return "Ganaste"
+    else:
+        return "Perdiste"
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    resultado = ""
+    cpu = ""
+    jugador = ""
+    nombre = ""
+
+    global puntos
+
+    if request.method == "POST":
+        nombre = request.form.get("nombre")
+        jugador = request.form.get("opcion")
+
+        if jugador:
+            cpu = random.choice(opciones)
+            resultado = determinar_ganador(jugador, cpu)
+
+            if resultado == "Ganaste":
+                puntos["jugador"] += 1
+            elif resultado == "Perdiste":
+                puntos["cpu"] += 1
+
+    return render_template(
+        "index.html",
+        resultado=resultado,
+        cpu=cpu,
+        jugador=jugador,
+        iconos=iconos,
+        puntos=puntos,
+        nombre=nombre
+    )
+
+if __name__ == "__main__":
+    app.run(debug=True)
+```
+
+---
+
+#### Análisis conceptual
+
+##### Uso de librerías externas
+
+- Se utiliza **Flask**, una librería externa que permite construir aplicaciones web.
+- Flask proporciona herramientas como:
+  - Creación de rutas (`@app.route`)
+  - Manejo de solicitudes (`request`)
+  - Renderizado de vistas (`render_template`)
+
+Esto demuestra cómo una librería puede abstraer procesos complejos como la comunicación entre cliente y servidor.
+
+---
+
+##### Uso de librerías estándar
+
+- Se utiliza la librería `random`, incluida en Python.
+- Permite generar valores aleatorios, en este caso para simular la elección de la computadora.
+
+Esto muestra cómo las librerías estándar complementan el desarrollo sin necesidad de dependencias externas.
+
+---
+
+##### Automatización de procesos
+
+Gracias a Flask, el programa puede:
+
+- Recibir datos desde un formulario web
+- Procesar información del usuario
+- Generar respuestas dinámicas
+- Mostrar resultados en una interfaz
+
+Todo esto sin necesidad de implementar manualmente protocolos de comunicación web.
+
+---
+
+##### Separación de responsabilidades
+
+El sistema está dividido en diferentes niveles:
+
+- **Entrada** → datos del usuario (`request`)
+- **Procesamiento** → lógica del juego (`determinar_ganador`)
+- **Salida** → interfaz (`render_template`)
+
+Esta estructura es fundamental en el desarrollo de aplicaciones web.
+
+---
+
+##### Interacción cliente-servidor
+
+El uso de Flask permite simular un entorno cliente-servidor donde:
+
+- El usuario interactúa desde el navegador
+- El servidor procesa la información
+- Se devuelve una respuesta dinámica
+
+Esto representa un modelo básico de aplicaciones web modernas.
+
+---
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/6cabb914-5dda-497b-b378-a58e849b6d88" />
+
+---
+<img width="500" height="1500" alt="image" src="https://github.com/user-attachments/assets/64b55445-3883-4cc3-90ad-d2684c27a6bf" />
+
+#### Conclusión del subtema
+
+El uso de librerías proporcionadas por el lenguaje, tanto estándar como externas, es esencial para el desarrollo eficiente de software. Estas herramientas permiten simplificar tareas complejas, mejorar la organización del código y acelerar el proceso de desarrollo, siendo una base fundamental en la creación de aplicaciones modernas.
+
+# 2.3 Creación de componentes definidos por el usuario
 
 En muchos casos, las librerías existentes no cubren completamente las necesidades de un proyecto, por lo que es necesario desarrollar **componentes personalizados**.
 
@@ -448,7 +595,7 @@ if __name__ == "__main__":
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/f065d6a1-6797-47d4-a3fc-693b55794ce5" />
 
 
-### 🔹 2.4 Creación y uso de librerías definidas por el usuario
+# 2.4 Creación y uso de librerías definidas por el usuario
 
 Una **librería definida por el usuario** es un conjunto de componentes creados con el propósito de ser reutilizados en uno o varios proyectos. Estas permiten organizar el código de manera más eficiente y facilitar su distribución.
 
@@ -474,7 +621,6 @@ Una **librería definida por el usuario** es un conjunto de componentes creados 
 - Facilidad para corregir errores en un solo lugar
 - Mejor organización del proyecto
 
-### 🔹 2.4 Creación y uso de paquetes/librerías definidas por el usuario
 
 En el desarrollo de software, una práctica fundamental es la creación de **librerías propias**, las cuales permiten organizar el código en módulos reutilizables. Estas librerías agrupan componentes relacionados, facilitando su mantenimiento, escalabilidad y reutilización en distintos proyectos.
 
@@ -646,6 +792,199 @@ Esto evidencia el uso de eventos y lógica interactiva dentro de la aplicación.
 
 La creación y uso de librerías definidas por el usuario permite construir sistemas más organizados, reutilizables y escalables. Este enfoque facilita la separación de responsabilidades dentro del software, mejorando su mantenimiento y permitiendo el desarrollo de aplicaciones más complejas de manera eficiente.
 
+### Componente Reutilizable: `product_card.py`
+
+##  Definición de clase
+
+```python
+class ProductCard(ft.Container):
+```
+
+Se crea un componente personalizado heredando de `Container`.
+
+ Esto cumple el requisito de **herencia**.
+
+---
+
+##  Diseño del contenedor
+
+```python
+self.width = 260
+self.padding = 15
+self.border_radius = 12
+self.bgcolor = "white"
+```
+
+* Tamaño fijo
+* Bordes redondeados
+* Fondo blanco
+
+---
+
+##  Sombra
+
+```python
+self.shadow = ft.BoxShadow(
+    blur_radius=10,
+    color="#dddddd",
+    offset=ft.Offset(2, 4)
+)
+```
+
+Da efecto moderno tipo tarjeta.
+
+---
+
+##  Imagen
+
+```python
+ft.Image(
+    src=f"/{imagen}",
+    width=230,
+    height=150,
+    fit="cover"
+)
+```
+
+Carga imágenes desde `/assets`.
+
+---
+
+##  Textos
+
+```python
+ft.Text(nombre, size=18, weight="bold")
+ft.Text(descripcion, size=13)
+ft.Text(f"$ {precio}", color="#2ED573")
+```
+
+* Nombre en negritas
+* Descripción pequeña
+* Precio resaltado en verde
+
+---
+
+##  Botones
+
+```python
+ft.Row(
+    controls=[
+        ft.Text("❤️"),
+        ft.Container(
+            content=ft.Text("Agregar")
+        )
+    ]
+)
+```
+
+* ❤️ Favorito (visual)
+* 🛒 Botón agregar
+
+---
+
+##  Animación (Hover)
+
+```python
+self.on_hover = self.hover
+```
+
+```python
+def hover(self, e):
+    if e.data == "true":
+        self.bgcolor = "#EEF1F5"
+```
+
+ Cambia color al pasar el mouse.
+
+---
+
+#  Estructura del Proyecto
+
+```bash
+PIntegrador/
+│
+├── main.py
+├── product_card.py
+├── assets/
+│   ├── laptopgamer.jpg
+│   ├── mouse.jpg
+│   └── ...
+```
+
+---
+
+#  Cómo ejecutar (Git Bash)
+
+##  1. Ir al proyecto
+
+```bash
+cd C:\Users\lunaz\Downloads\TAP\PIntegrador
+```
+
+##  2. Ejecutar
+
+```bash
+python main.py
+```
+
+O en web:
+
+```bash
+flet run main.py --web
+```
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/2bab4557-5018-469b-bf17-35726b8a5e5b" />
+
+---
+
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/8492a4af-3606-4f6a-aece-8cfa42faff14" />
+
+
+#  Build para Web
+
+```bash
+flet build web
+```
+
+<img width="1904" height="1012" alt="image" src="https://github.com/user-attachments/assets/bdad6bf8-28d0-415b-bf70-51600e547393" />
+
+
+---
+
+
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/d73b8d50-debe-473f-8835-3961dd9c5e24" />
+
+
+graceful-crepe-82e897
+# LINK DESPLIEGUE WEB
+## https://graceful-crepe-82e897.netlify.app
+
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/806c8653-26d3-4e68-b5b6-21f70df50db9" />
+
+
+---
+
+#  Subir a GitHub
+
+```bash
+git init
+git add .
+git commit -m "Proyecto TechStore"
+git branch -M main
+git remote add origin https://github.com/tu-usuario/techstore.git
+git push -u origin main
+```
+
+---
+
+#  Conclusión
+
+Este proyecto permitió:
+
+* Aplicar herencia en componentes
+* Crear interfaces reutilizables
+* Manejar recursos (assets)
+* Preparar una app escalable a futuro
+
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/bc84ac01-9a5a-4bf3-924e-eb9e46df83bc" />
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/e3381066-1efa-4bef-95a4-bfe69bb7ae27" />
 
@@ -657,6 +996,7 @@ Para ejecutar los ejemplos incluidos en este repositorio, es necesario contar co
 
 ---
 
+
 ## Conclusión
 
 El uso de componentes y librerías representa una de las bases fundamentales del desarrollo de software moderno. Estos permiten construir aplicaciones más organizadas, eficientes y escalables, además de facilitar el mantenimiento y la reutilización del código.
@@ -667,14 +1007,17 @@ Asimismo, la capacidad de crear componentes y librerías propias otorga al desar
 
 ## Autor
 
-- Nombre: Tu Nombre  
-- Materia: Programación / Ingeniería en Sistemas  
-- Unidad: 2 - Componentes y Librerías  
+- Nombre: Hidalgo Flores Yesenia Milet
+- Unidad: 2 - Componentes y Librerías
+- Materia: Topicos Avanzados de Programación
 
 ---
 
-## Notas
+## Bibliografías
+UNIDAD 2 COMPONENTES y LIBRERIAS. (2019, 23 mayo). https://componentesylibreriasunit2.blogspot.com/2019/05/
 
-- Este proyecto tiene fines educativos.
-- El contenido presentado corresponde al desarrollo de la Unidad 2.
-- Se recomienda complementar con práctica para reforzar el aprendizaje.
+Client challenge. (s. f.-h). https://es.slideshare.net/slideshow/componentes-y-libreras-tpicos-avanzados-de-programacin/35825047
+
+Jk, J. (2016). Unidad III: Componentes y librerías Definición conceptual de componentes, paquetes/librerías. www.academia.edu. 
+
+https://www.academia.edu/23849067/Unidad_III_Componentes_y_librer%C3%ADas_Definici%C3%B3n_conceptual_de_componentes_paquetes_librer%C3%ADas
