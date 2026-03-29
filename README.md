@@ -474,6 +474,177 @@ Una **librería definida por el usuario** es un conjunto de componentes creados 
 - Facilidad para corregir errores en un solo lugar
 - Mejor organización del proyecto
 
+### 🔹 2.4 Creación y uso de paquetes/librerías definidas por el usuario
+
+En el desarrollo de software, una práctica fundamental es la creación de **librerías propias**, las cuales permiten organizar el código en módulos reutilizables. Estas librerías agrupan componentes relacionados, facilitando su mantenimiento, escalabilidad y reutilización en distintos proyectos.
+
+A diferencia de las librerías estándar, las librerías definidas por el usuario responden a necesidades específicas del sistema que se está desarrollando.
+
+---
+
+#### Aplicación práctica
+
+El siguiente ejemplo muestra cómo se utiliza una **librería personalizada**, en este caso representada por el componente `ProductCard`, el cual es importado desde un archivo externo.
+
+---
+
+#### Código aplicado
+
+```python
+import flet as ft 
+from product_card import ProductCard
+
+productos = [
+    {"id": 1, "nombre": "Laptop Gamer", "descripcion": "Ryzen 7 16GB RAM", "precio": 25000, "ruta_imagen": "laptopgamer.jpg"},
+    {"id": 2, "nombre": "Mouse Gamer", "descripcion": "Mouse RGB", "precio": 350, "ruta_imagen": "mouse.jpg"},
+    {"id": 3, "nombre": "Teclado Mecánico", "descripcion": "Switch blue RGB", "precio": 1200, "ruta_imagen": "teclado.jpg"},
+    {"id": 4, "nombre": "Audifonos Gamer", "descripcion": "Sonido envolvente", "precio": 900, "ruta_imagen": "audifonosg.jpg"},
+    {"id": 5, "nombre": "Televisión 32", "descripcion": "Full HD 144Hz", "precio": 4200, "ruta_imagen": "televisor.jpg"},
+    {"id": 6, "nombre": "Audifonos", "descripcion": "Full HD 144Hz", "precio": 4200, "ruta_imagen": "audifonos.jpg"},
+    {"id": 7, "nombre": "Cargador", "descripcion": "Full HD 144Hz", "precio": 4200, "ruta_imagen": "cargador.jpg"},
+    {"id": 8, "nombre": "Impresora", "descripcion": "Full HD 144Hz", "precio": 4200, "ruta_imagen": "impresora.jpg"},
+    {"id": 9, "nombre": "Tablet", "descripcion": "Full HD 144Hz", "precio": 4200, "ruta_imagen": "tablet.jpg"},
+    {"id": 10, "nombre": "Smartwatch", "descripcion": "Full HD 144Hz", "precio": 4200, "ruta_imagen": "smartwatch.jpg"},
+    {"id": 11, "nombre": "Laptop", "descripcion": "Full HD 144Hz", "precio": 4200, "ruta_imagen": "laptop.jpg"},
+    {"id": 12, "nombre": "Bocina", "descripcion": "Full HD 144Hz", "precio": 4200, "ruta_imagen": "bocina.jpg"},
+    {"id": 13, "nombre": "Multicontactos", "descripcion": "Full HD 144Hz", "precio": 4200, "ruta_imagen": "multicontacto.jpg"},
+    {"id": 14, "nombre": "Microfono", "descripcion": "Full HD 144Hz", "precio": 4200, "ruta_imagen": "microfono.jpg"},
+    {"id": 15, "nombre": "Router", "descripcion": "Full HD 144Hz", "precio": 4200, "ruta_imagen": "router.jpg"},
+]
+
+def main(page: ft.Page):
+    page.title = "TechStore"
+    page.scroll = "auto"
+    page.bgcolor = "#BFC8ED"
+    page.padding = 30
+    page.assets_dir = "assets"
+
+    carrito = []
+    favoritos = []
+    
+    carrito_text = ft.Text("0", size=16, weight="bold", color="#3742FA")
+    favoritos_text = ft.Text("0", size=16, weight="bold", color="#FF6B81")
+    
+    def mostrar_mensaje(msg):
+        page.snack_bar = ft.SnackBar(
+            content=ft.Text(msg, color="white"),
+            bgcolor="#3742FA"
+        )
+        page.snack_bar.open = True
+        page.update()
+    
+    def agregar_carrito(producto):
+        carrito.append(producto)
+        carrito_text.value = str(len(carrito))
+        mostrar_mensaje(f"✓ {producto['nombre']} agregado al carrito")
+        page.update()
+    
+    def agregar_favorito(producto):
+        if producto not in favoritos:
+            favoritos.append(producto)
+        else:
+            favoritos.remove(producto)
+        favoritos_text.value = str(len(favoritos))
+        page.update()
+
+    header = ft.Container(
+        content=ft.Row([
+            ft.Column([
+                ft.Text("TechStore", size=50, weight="bold"),
+                ft.Text("Catálogo de productos tecnológicos", size=16)
+            ]),
+            ft.Row([
+                ft.Container(
+                    content=ft.Row([ft.Text("❤️"), favoritos_text])
+                ),
+                ft.Container(
+                    content=ft.Row([ft.Text("🛒"), carrito_text])
+                )
+            ])
+        ])
+    )
+
+    tarjetas = []
+    for p in productos:
+        card = ProductCard(
+            p["nombre"],
+            p["descripcion"],
+            p["precio"],
+            p["ruta_imagen"]
+        )
+        card.agregar = lambda e, prod=p: agregar_carrito(prod)
+        tarjetas.append(card)
+
+    grid = ft.Row(
+        controls=tarjetas,
+        wrap=True
+    )
+
+    page.add(header, grid)
+
+if __name__ == "__main__":
+    ft.app(target=main, assets_dir="assets")
+```
+
+---
+
+#### Análisis conceptual
+
+##### Uso de librerías definidas por el usuario
+
+- Se importa `ProductCard` desde un archivo externo (`product_card.py`).
+- Esto representa una **librería o módulo personalizado**, creado para encapsular la lógica y diseño de un producto.
+
+Esto demuestra cómo un desarrollador puede crear sus propias herramientas reutilizables.
+
+---
+
+##### Modularidad del sistema
+
+El sistema se divide en diferentes partes:
+
+- **Datos** → lista `productos`
+- **Componente externo** → `ProductCard`
+- **Lógica de negocio** → funciones como `agregar_carrito` y `agregar_favorito`
+- **Interfaz** → construcción de la página con Flet
+
+Esta separación permite una mejor organización del código.
+
+---
+
+##### Reutilización de componentes
+
+El componente `ProductCard` se reutiliza múltiples veces para mostrar distintos productos.  
+Esto evita repetir código y facilita la expansión del sistema (por ejemplo, agregar más productos).
+
+---
+
+##### Manejo del estado
+
+El programa implementa estructuras como:
+
+- `carrito` → almacena productos agregados
+- `favoritos` → controla productos marcados
+
+Esto refleja el manejo de **estado de la aplicación**, fundamental en sistemas interactivos.
+
+---
+
+##### Interacción con el usuario
+
+El sistema permite:
+
+- Agregar productos al carrito
+- Marcar favoritos
+- Mostrar mensajes dinámicos
+
+Esto evidencia el uso de eventos y lógica interactiva dentro de la aplicación.
+
+---
+
+#### Conclusión del subtema
+
+La creación y uso de librerías definidas por el usuario permite construir sistemas más organizados, reutilizables y escalables. Este enfoque facilita la separación de responsabilidades dentro del software, mejorando su mantenimiento y permitiendo el desarrollo de aplicaciones más complejas de manera eficiente.
 
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/bc84ac01-9a5a-4bf3-924e-eb9e46df83bc" />
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/e3381066-1efa-4bef-95a4-bfe69bb7ae27" />
